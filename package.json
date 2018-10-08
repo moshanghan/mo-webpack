@@ -1,0 +1,49 @@
+{
+  "name": "webpack-demo",
+  "version": "1.0.0",
+  "description": "webpack 练习",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env NODE_ENV=development webpack-dev-server  --devtool eval --progress --colors --hot --inline --content-base --config build/webpack.dev.conf.js",
+    "build": "cross-env NODE_ENV=production  webpack --progress --colors --config build/webpack.prod.conf.js"
+  },
+  "keywords": [
+    "webpack"
+  ],
+  "author": "moshanghan",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "Babel": "0.0.1",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.4",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "copy-webpack-plugin": "^4.5.2",
+    "cross-env": "^5.2.0",
+    "happypack": "^5.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.4.3",
+    "open-browser-webpack-plugin": "0.0.5",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "ora": "^3.0.0",
+    "shelljs": "^0.8.2",
+    "url-loader": "^1.1.1",
+    "vue-loader": "^15.4.2",
+    "vue-template-compiler": "^2.5.17",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.9",
+    "webpack-merge": "^4.1.4"
+  },
+  "dependencies": {
+    "css-loader": "^1.0.0",
+    "less-loader": "^4.1.0",
+    "style-loader": "^0.23.0",
+    "vue": "^2.5.17"
+  }
+}
