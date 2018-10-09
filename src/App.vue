@@ -13,6 +13,10 @@ created(){
 }
 </script>
 
-<style>
-
+<style lang="less" scoped>
+.home-page{
+  font-size: 20px;
+  color:#ccc;
+}
 </style>
+

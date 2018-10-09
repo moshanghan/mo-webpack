@@ -4,7 +4,8 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const baseWebpackConfig = require('./webpack.base.conf')
 const merge = require('webpack-merge')
-const OpenBrowserPlugin = require('open-browser-webpack-plugin');
+// 自动打开浏览器，使用webpack-dev-server 指令可以直接打开
+// const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 
 
 function resolveApp(relativePath) {
@@ -111,6 +112,6 @@ module.exports = {
     // new webpack.HotModuleReplacementPlugin(), //热加载插件
     // new webpack.optimize.OccurrenceOrderPlugin(), // 为组件分配ID，通过这个插件Webpack可以分析和优先考虑使用最多的模块，并为它们分配最小的ID
     new VueLoaderPlugin(),
-    new OpenBrowserPlugin({ url: 'http://localhost:3003' })
+    // new OpenBrowserPlugin({ url: 'http://localhost:3003' })
   ],
 }

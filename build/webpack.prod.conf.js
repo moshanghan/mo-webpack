@@ -1,17 +1,25 @@
-// var path = require('path')
-var BaseConfig = require('./webpack.base.conf.js')
-var merge = require('webpack-merge')
-var webpack = require('webpack')
-var config = require('../config')
+const path = require('path')
+const BaseConfig = require('./webpack.base.conf.js')
+const merge = require('webpack-merge')
+const webpack = require('webpack')
+const config = require('../config')
 const utils = require('./utils')
+// 删除
+const CleanPlugin = require('clean-webpack-plugin')
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
-var HtmlWebpackPlugin = require('html-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 console.log(`当前环境：${process.env.NODE_ENV}`)
-
+// 查找根目录的上级目录
+const myPath = path.resolve(__dirname, '..')
+const cleanOptions = {
+  root: myPath, //根目录
+  verbose: true, //开启在控制台输出信息
+}
 
 module.exports = {
   devtool: false,
@@ -33,6 +41,9 @@ module.exports = {
   },
   optimization: {
     minimize: true,
+    minimizer: [
+      new OptimizeCSSAssetsPlugin({})
+    ],
     runtimeChunk: false,
     splitChunks: {
       chunks: 'async',
@@ -57,20 +68,41 @@ module.exports = {
         test: /\.css$/,
         use: [
           MiniCssExtractPlugin.loader,
-          "css-loader"
+          {
+            loader: "css-loader",
+            options: {
+              minimize: true
+            }
+          },
         ]
       },
       {
         test: /\.less$/,
         use: [
           MiniCssExtractPlugin.loader,
-          "css-loader",
-          "less-loader"
+          // "css-loader",
+          {
+            loader: "css-loader",
+            options: {
+              minimize: true
+            }
+          },
+          {
+            loader: "less-loader",
+            options: {
+              minimize: true
+            }
+          },
+          // "less-loader"
         ]
       },
       {
         test: /\.vue$/,
         loader: 'vue-loader'
+      },
+      {
+        test: /\.js$/,
+        loader: 'babel-loader'
       },
       {
         test: /\.(png|jpg|jpeg|gif)$/,
@@ -98,6 +130,8 @@ module.exports = {
   externals: merge({}, BaseConfig.externals),
   resolve: merge({}, BaseConfig.resolve),
   plugins: [
+    // 删除文件夹的插件
+    new CleanPlugin(['dist'], cleanOptions),
     new HtmlWebpackPlugin({
       filename: config.build.index,
       template: 'index.html',
@@ -131,8 +165,11 @@ module.exports = {
     }),
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[id].css"
-    })
+      // filename: "[name].css",
+      // chunkFilename: "[id].css"
+      filename: utils.assetsPath('css/[name].[chunkhash].css'),
+      chunkFilename: utils.assetsPath('css/[id].[chunkhash].css')
+    }),
+    // new UglifyJsPlugin({}),
   ]
 }

@@ -1,4 +1,4 @@
-var path = require('path')
+const path = require('path')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const utils = require('./utils')
 const resolvePath = (dir) => {
@@ -7,7 +7,10 @@ const resolvePath = (dir) => {
 
 module.exports = {
     module: {
-        rules: [
+        rules: [{
+                test: /\.js$/,
+                loader: 'babel-loader',
+            },
             {
                 test: /\.vue$/,
                 loader: 'vue-loader'
@@ -24,19 +27,19 @@ module.exports = {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
                 loader: 'url-loader',
                 options: {
-                  limit: 10000,
-                  name: utils.assetsPath('img/[name].[hash:7].[ext]')
+                    limit: 10000,
+                    name: utils.assetsPath('img/[name].[hash:7].[ext]')
                 }
-              },
+            },
             {
                 test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
                 loader: 'url-loader',
                 options: {
-                  limit: 10000,
-                  name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+                    limit: 10000,
+                    name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
                 }
-              },
-              {
+            },
+            {
                 test: /vue-preview.src.*?js$/,
                 loader: 'babel'
             }
@@ -51,5 +54,5 @@ module.exports = {
     },
     plugins: [
         new VueLoaderPlugin(),
-      ],
+    ],
 }
