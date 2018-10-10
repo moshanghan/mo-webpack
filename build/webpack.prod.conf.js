@@ -42,6 +42,7 @@ module.exports = {
   optimization: {
     minimize: true,
     minimizer: [
+      new UglifyJsPlugin({}),
       new OptimizeCSSAssetsPlugin({})
     ],
     runtimeChunk: false,
@@ -63,6 +64,12 @@ module.exports = {
       }
     }
   },
+  // babel: {
+  //   babelrc: false,
+  //   presets: [
+  //     ['es2015'],
+  //   ],
+  // },
   module: {
     rules: [{
         test: /\.css$/,
@@ -100,10 +107,17 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader'
       },
+      // {
+      //   test: /\.js$/,
+      //   loader: 'babel-loader',
+      //   include: [path.join(__dirname, '..','src')]
+      // },
       {
         test: /\.js$/,
+        exclude: /node_modules/,
         loader: 'babel-loader'
       },
+
       {
         test: /\.(png|jpg|jpeg|gif)$/,
         loader: 'url-loader',
@@ -170,6 +184,6 @@ module.exports = {
       filename: utils.assetsPath('css/[name].[chunkhash].css'),
       chunkFilename: utils.assetsPath('css/[id].[chunkhash].css')
     }),
-    // new UglifyJsPlugin({}),
+
   ]
 }

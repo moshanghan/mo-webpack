@@ -4,7 +4,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const baseWebpackConfig = require('./webpack.base.conf')
 const merge = require('webpack-merge')
-// 自动打开浏览器，使用webpack-dev-server 指令可以直接打开
+// 自动打开浏览器，使用webpack-dev-server 指令可以直接
 // const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 
 
