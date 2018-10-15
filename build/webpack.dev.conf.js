@@ -4,6 +4,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const baseWebpackConfig = require('./webpack.base.conf')
 const merge = require('webpack-merge')
+const webpack = require('webpack');
 // 自动打开浏览器，使用webpack-dev-server 指令可以直接
 // const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 
@@ -84,6 +85,7 @@ module.exports = {
       }
     }
   },
+  // "start": "cross-env NODE_ENV=development webpack-dev-server --port 30303 --open  --devtool eval --progress --colors --hot --inline --content-base --config build/webpack.dev.conf.js",
   devServer: {
     // 指定启动服务的更目录
     contentBase: __dirname + '/src',
@@ -92,6 +94,8 @@ module.exports = {
     host: 'localhost',
     // 启用热更新
     hot: true,
+    open:true,
+    inline:true,
     // 以下信息可有可无，为了完整
     // inline: true,
     // historyApiFallback: true,
@@ -112,6 +116,9 @@ module.exports = {
     // new webpack.HotModuleReplacementPlugin(), //热加载插件
     // new webpack.optimize.OccurrenceOrderPlugin(), // 为组件分配ID，通过这个插件Webpack可以分析和优先考虑使用最多的模块，并为它们分配最小的ID
     new VueLoaderPlugin(),
+    // --hot 可以在启动时添加，方便
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin()
     // new OpenBrowserPlugin({ url: 'http://localhost:3003' })
   ],
 }
