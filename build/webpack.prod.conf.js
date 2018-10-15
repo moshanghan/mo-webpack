@@ -9,7 +9,8 @@ const CleanPlugin = require('clean-webpack-plugin')
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
@@ -24,9 +25,7 @@ const cleanOptions = {
 module.exports = {
   devtool: false,
   mode: "production",
-  entry: {
-    app: './src/main.js'
-  },
+  entry: ["babel-polyfill", './src/main.js'],
   // 指定项目构建的输出位置
   output: {
     path: config.build.assetsRoot,
@@ -40,12 +39,45 @@ module.exports = {
     // chunkFilename: '[name]_[chunkhash:8]_chunk.js'
   },
   optimization: {
-    minimize: true,
+    // minimize: true,
     minimizer: [
-      new UglifyJsPlugin({}),
-      new OptimizeCSSAssetsPlugin({})
+      // new UglifyJsPlugin({}),
+      // new OptimizeCSSAssetsPlugin({})
+      // 自定义js优化配置，将会覆盖默认配置
+      new UglifyJsPlugin({
+        exclude: /\.min\.js$/, // 过滤掉以".min.js"结尾的文件，我们认为这个后缀本身就是已经压缩好的代码，没必要进行二次压缩
+        cache: true,
+        parallel: true, // 开启并行压缩，充分利用cpu
+        sourceMap: false,
+        extractComments: false, // 移除注释
+        uglifyOptions: {
+          compress: {
+            unused: true,
+            warnings: false,
+            drop_debugger: true
+          },
+          output: {
+            comments: false
+          }
+        }
+      }),
+      // 用于优化css文件
+      new OptimizeCssAssetsPlugin({
+        assetNameRegExp: /\.css$/g,
+        cssProcessorOptions: {
+          safe: true,
+          autoprefixer: {
+            disable: true
+          }, // 这里是个大坑，稍后会提到
+          mergeLonghand: false,
+          discardComments: {
+            removeAll: true // 移除注释
+          }
+        },
+        canPrint: true
+      })
     ],
-    runtimeChunk: false,
+    runtimeChunk: true,
     splitChunks: {
       chunks: 'async',
       minSize: 30000,
@@ -64,12 +96,6 @@ module.exports = {
       }
     }
   },
-  // babel: {
-  //   babelrc: false,
-  //   presets: [
-  //     ['es2015'],
-  //   ],
-  // },
   module: {
     rules: [{
         test: /\.css$/,
@@ -100,43 +126,32 @@ module.exports = {
               minimize: true
             }
           },
-          // "less-loader"
         ]
       },
       {
         test: /\.vue$/,
         loader: 'vue-loader'
       },
-      // {
-      //   test: /\.js$/,
-      //   loader: 'babel-loader',
-      //   include: [path.join(__dirname, '..','src')]
-      // },
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader'
-      },
-
-      {
-        test: /\.(png|jpg|jpeg|gif)$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: utils.assetsPath('img/[name].[hash:7].[ext]')
+        test: /\.m?js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          // 可以通过.babelrc中的配置取代options
+          // options: {
+          //   presets: ['@babel/preset-env'],
+          //   plugins: ['@babel/plugin-transform-runtime']
+          // }
         }
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
         loader: 'url-loader',
+        exclude: /node_modules/,
         options: {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
-      },
-      {
-        test: /vue-preview.src.*?js$/,
-        loader: 'babel'
       }
 
     ]
